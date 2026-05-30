@@ -4,10 +4,64 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3D-pocketbell — SIGN-X v8.40</title>
+    <link rel="stylesheet" href="./src/styles/globals.css" />
   </head>
   <body class="bg-slate-950 select-none">
-    <div id="root"></div>
     
-    <script type="module" src="./src/main.tsx"></script>
+    <div class="min-h-screen bg-slate-950 p-4 md:p-8 text-slate-100 font-mono flex items-center justify-center">
+      <div class="w-full max-w-5xl bg-slate-900/30 border border-slate-800/80 p-6 rounded-2xl shadow-[0_0_60px_rgba(16,185,129,0.05)] backdrop-blur-md">
+        
+        <header className="flex justify-between items-center border-b border-slate-800/60 pb-4 mb-6" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(30,41,59,0.6); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <h1 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 tracking-wider" style="font-size: 1.5rem; font-weight: 900; color: #10b981;">
+              3D-pocketbell — SIGN-X v8.40
+            </h1>
+            <p class="text-xs text-slate-500 mt-1" style="font-size: 0.75rem; color: #64748b;">国文法62進数カテゴリー品詞圧縮（GitHubピュア直撃形態）</p>
+          </div>
+          <div id="sync-badge" class="bg-slate-950 border border-emerald-500/30 px-3 py-1 rounded-full text-emerald-400 text-xs font-bold" style="color: #34d399; font-size: 0.75rem; border: 1px solid rgba(16,185,129,0.3); padding: 0.25rem 0.75rem; border-radius: 9999px;">
+            ● SIGN-X Core ONLINE
+          </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" style="display: grid; grid-template-columns: 2s 1s; gap: 1.5rem;">
+          
+          <div class="md:col-span-2 space-y-6" style="display: flex; flex-direction: column; gap: 1.5rem;">
+            
+            <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 shadow-inner" style="background: #020617; border: 1px solid #1e293b; padding: 1rem; border-radius: 0.75rem;">
+              <label class="block text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-wider" style="font-size: 10px; color: #64748b; font-weight: bold; display: block; margin-bottom: 0.5rem;">📥 Input Layer (自然言語入力層)</label>
+              <textarea id="input-textarea" placeholder="例：私、今から電車で行くね！マスター、パンドラパンパン！" class="w-full h-24 bg-transparent border-none text-slate-200 placeholder-slate-800 focus:outline-none text-sm font-bold tracking-wide resize-none" style="width: 100%; height: 6rem; bg: transparent; border: none; color: #e2e8f0; outline: none; font-size: 0.875rem; resize: none; background: transparent;"></textarea>
+            </div>
+
+            <div class="bg-slate-950/90 border border-emerald-950/80 rounded-xl p-4 relative overflow-hidden" style="background: #020617; border: 1px solid rgba(16,185,129,0.2); padding: 1rem; border-radius: 0.75rem;">
+              <label class="block text-[10px] font-bold text-emerald-500/70 mb-2 uppercase tracking-wider" style="font-size: 10px; color: #34d399; font-weight: bold; display: block; margin-bottom: 0.5rem;">📟 Packet Stream (62進数パケット出力層)</label>
+              <input id="packet-output" type="text" class="w-full bg-transparent border-none text-emerald-400 font-black tracking-widest text-2xl focus:outline-none" style="width: 100%; border: none; color: #34d399; font-weight: 900; font-size: 1.5rem; background: transparent; outline: none;" placeholder="⚡ AWAIT SIGNAL..." readonly />
+              <div class="flex gap-4 mt-3 pt-3 border-t border-slate-900 text-[10px] text-slate-600" style="display: flex; gap: 1rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #0f172a; font-size: 10px; color: #475569;">
+                <div id="ratio-panel">PANDORA CONVERGENCE: <span style="color: #10b981; font-weight: bold;">n=3 self-consistent</span></div>
+              </div>
+            </div>
+
+            <div class="bg-slate-950/90 border border-cyan-950/80 rounded-xl p-4 relative overflow-hidden" style="background: #020617; border: 1px solid rgba(6,182,212,0.2); padding: 1rem; border-radius: 0.75rem;">
+              <label class="block text-[10px] font-bold text-cyan-500/70 mb-2 uppercase tracking-wider" style="font-size: 10px; color: #22d3ee; font-weight: bold; display: block; margin-bottom: 0.5rem;">🔓 Decoded Test Output (復元逆写像検証層)</label>
+              <div id="decode-output" class="w-full min-h-[2rem] flex items-center text-cyan-400 font-bold tracking-wide text-sm break-all" style="color: #22d3ee; font-weight: bold; font-size: 0.875rem;">
+                ⏳ AWAIT PACKET CONVERGENCE...
+              </div>
+            </div>
+
+          </div>
+
+          <div class="md:col-span-1">
+            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4" style="background: rgba(2,6,23,0.6); border: 1px solid #1e293b; padding: 1rem; border-radius: 0.75rem;">
+              <h3 class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider" style="font-size: 0.75rem; color: #64748b; font-weight: bold; margin-bottom: 0.75rem;">⚙️ Vector Keyboard</h3>
+              <div id="vector-keyboard" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+                </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>
