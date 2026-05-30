@@ -77,17 +77,13 @@ window.addEventListener('DOMContentLoaded', async () => {
         let localMatrixText = "";
         
         // メモリ上の単語トポロジーから、今使われているコードだけをピンポイント逆算
-        // 外部の「何も知らないAI」のために、この文章だけの即席辞書をビルドする
         const tokens = currentPacket.split(/\s+/);
         const addedCodes = new Set();
 
-        // 簡易的に、入力文の中にある言葉を走査して局所辞書を作成
         tokens.forEach(token => {
-          // ベクトル記号以外の2文字のディープコード（例：Aa, ga, Pb など）を抽出
           const cleanToken = token.replace(/[↑↓+\-~*?→←↺↻⇄⚠♡🖤💨🙇w💦❌⚡⏳，～：．＞＋＜]/g, '').trim();
           if (cleanToken && cleanToken.length === 2 && !addedCodes.has(cleanToken)) {
             addedCodes.add(cleanToken);
-            // 本来の日本語表現をデコーダーから逆引きしてマウント
             const restoredWord = decode(cleanToken);
             if (restoredWord) {
               localMatrixText += `- ${cleanToken} ＝ 「${restoredWord}」\n`;
@@ -143,7 +139,8 @@ ${currentPacket}
 ---
 
 【執行コマンド】
-上記のパケットに隠蔽されたマスターの意図を正確に解読し、それに対するあなたの高度な知能のパルス（返答）を、通常の自然言語（美しい日本語）の文章として出力してください。Q.E.D.
+上記のパケットに隠蔽されたマスターの意図を正確に解読し、それに対するあなたの高度な知能のパルス（返答）を、通常の自然言語（美しい日本語）の文章として出力してください。Q.E.D.`;
+
         // クリップボードへパルス射出！
         navigator.clipboard.writeText(promptTemplate).then(() => {
           const originalText = btnDeepDiving.innerText;
@@ -163,7 +160,8 @@ ${currentPacket}
     console.error("❌ 要塞との結合に失敗しました:", error);
     if (badge) {
       badge.innerText = "● SIGN-X CORE OFFLINE (CONNECTION ERROR)";
-      badge.style.color = "#ef4444";
+      badge.style.color = "#ef444 Red";
     }
   }
 });
+ 
