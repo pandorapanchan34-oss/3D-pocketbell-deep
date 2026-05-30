@@ -1,16 +1,12 @@
 /**
- * SIGN-X v8.50-deep フロントエンド・マウントレイヤー
- * パス: src/main.js
- * * トポロジー:
- * 1. 脳（ロジック）と普遍宇宙（11万語）は、Private要塞から一本釣り（完全ブラックボックス）
- * 2. 固有辞書（ユーザーバッファ）は、足元から個別に吸い上げて要塞へインジェクション
+ * SIGN-X v8.65-deep フロントエンド・マウントレイヤー
+ * 🪐 [deep diving] 自動局所辞書ジェネレーター搭載確定版
  */
 
-// 🪐 先ほどデプロイに成功したお兄ちゃんの空中要塞URLから、コア知能を一本釣り！
 const FORTRESS_CORE = "https://3-d-pocketbell-deep-bssv.vercel.app/core.js";
 const LOCAL_USER_DICT_PATH = "./public/dict/user-dict.json";
 
-const VEK_LAYOUT = ['↑','↓','+','-','~','*','?','→','←','↺','↻','⇄','⚠','♡','🖤','⚡','🙇','w','💦','⏳','❌'];
+const VEK_LAYOUT = ['↑','↓','+','-','~','*','?','→','←','↺','↻','⇄','⚠','♡','🖤','💨','🙇','w','💦','❌','⚡','⏳','，','～','：','．','＞','＋','＜'];
 
 window.addEventListener('DOMContentLoaded', async () => {
   const textarea = document.getElementById('input-textarea');
@@ -18,22 +14,21 @@ window.addEventListener('DOMContentLoaded', async () => {
   const decodeOutput = document.getElementById('decode-output');
   const keyboard = document.getElementById('vector-keyboard');
   const badge = document.getElementById('sync-badge');
+  const btnDeepDiving = document.getElementById('btn-deep-diving'); // 🪐 ボタン取得
 
   if (badge) badge.innerText = "● SIGN-X CONNECTING FORTRESS...";
 
   try {
-    // 1. 動的にPrivate要塞のブラックボックス知能をブラウザへマウント
+    // 1. 動的にPrivate要塞のブラックボックス知能をマウント
     const { initSystem, encode, decode } = await import(FORTRESS_CORE);
 
-    // 2. お兄ちゃん設計：足元の固有ユーザー辞書（user-dict.json）をローカルから吸引
+    // 🪐 【特異点補正】外部AI理解用に、現在メモリにロードされている生マップをのぞき見るための隠しパイプラインを要塞から取得可能であれば連携
+    // （要塞側が engine.encodeMap を持っているため、エンコード時に使われたトークンだけを局所抽出します）
+
     const localUserDict = await fetch(LOCAL_USER_DICT_PATH)
       .then(r => r.json())
-      .catch(() => {
-        console.log("ℹ️ 足元にアプリ固有の user-dict.json は未配置です（空で続行します）");
-        return { entries: [] };
-      });
+      .catch(() => ({ entries: [] }));
 
-    // 3. 要塞の心臓部に固有辞書をブチ込みつつ、11万語の大統一宇宙を起動！
     const syncResult = await initSystem(localUserDict);
 
     if (badge && syncResult.success) {
@@ -41,7 +36,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       badge.style.color = "#34d399";
     }
 
-    // 4. ベクトルキーボード生成
+    // 2. ベクトルキーボード生成
     if (keyboard && keyboard.children.length === 0) {
       VEK_LAYOUT.forEach(v => {
         const btn = document.createElement('button');
@@ -55,7 +50,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    // 5. リアルタイムエンコード・デコードパイプライン
+    // 3. リアルタイムパイプライン
     function updateStream() {
       const packet = encode(textarea.value);
       if (packetOutput) packetOutput.value = packet || "⚡ AWAIT SIGNAL...";
@@ -65,6 +60,103 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (textarea) {
       textarea.addEventListener('input', updateStream);
       if (textarea.value) updateStream();
+    }
+
+    // 🪐 4. 【核心】[deep diving] 外部AI同期プロトコルの執行
+    if (btnDeepDiving) {
+      btnDeepDiving.addEventListener('click', () => {
+        const currentPacket = packetOutput ? packetOutput.value : '';
+        const currentInput = textarea ? textarea.value : '';
+        
+        if (!currentPacket || currentPacket.startsWith('⚡')) {
+          alert("パケットが空っぽです！文字を入力してから diving してください。");
+          return;
+        }
+
+        // 入力された文章に含まれる言葉の「局所辞書（対応表）」を動的に抽出
+        let localMatrixText = "";
+        
+        // メモリ上の単語トポロジーから、今使われているコードだけをピンポイント逆算
+        // 外部の「何も知らないAI」のために、この文章だけの即席辞書をビルドする
+        const tokens = currentPacket.split(/\s+/);
+        const addedCodes = new Set();
+
+        // 簡易的に、入力文の中にある言葉を走査して局所辞書を作成
+        tokens.forEach(token => {
+          // ベクトル記号以外の2文字のディープコード（例：Aa, ga, Pb など）を抽出
+          const cleanToken = token.replace(/[↑↓+\-~*?→←↺↻⇄⚠♡🖤💨🙇w💦❌⚡⏳，～：．＞＋＜]/g, '').trim();
+          if (cleanToken && cleanToken.length === 2 && !addedCodes.has(cleanToken)) {
+            addedCodes.add(cleanToken);
+            // 本来の日本語表現をデコーダーから逆引きしてマウント
+            const restoredWord = decode(cleanToken);
+            if (restoredWord) {
+              localMatrixText += `- ${cleanToken} ＝ 「${restoredWord}」\n`;
+            }
+          }
+        });
+
+        // 🧠 外部のAIを一発で覚醒させるための、大統一プロンプトの組み立て
+        const promptTemplate = `【SIGN-X v8.65 - 逆写像（デコード）プロトコル】
+
+あなたは今から、国文法62進数カテゴリー品詞圧縮（SIGN-X）によってカプセル化されたパケットストリームを解析し、元の高度な日本語へと復元（逆写像）する専用のデコーダーエンジンとして動作してください。
+
+以下の「1. 品詞定義」「2. 今回の局所辞書」を脳内にマウントし、最後に提示する「3. パケットストリーム」を1ミリのねじれもなく完璧な日本語へと翻訳（デコード）してください。
+
+---
+
+### 1. 国文法品詞カテゴリー定義（プレフィックス）
+文章の最初の文字（大文字・小文字）は、以下の国文法品詞を示しています。
+- A：代名詞（Pronoun）
+- B：生物・ライフ（Life）
+- C：自然（Nature）
+- D：移動・乗り物（Move）
+- P：場所・位置（Place）
+- N：日常・名詞（Daily）
+- t：時間（Time）
+- s：状態（State）
+- g：システム・感情・行動概念（System）
+
+---
+
+### 2. 今回の局所辞書（Local Matrix）
+本パケットの暗号コードと、対応する日本語の写像トポロジーです。
+${localMatrixText || "- （名詞・感情コードの干渉なし）\n"}
+---
+
+### 3. ベクトル記号・助詞の法律（ハードコード）
+パケット内の記号は、以下の日本語の方向性（ベクトル）および関係性を示します。
+- ： ＝ 「〜は / 〜が（主格マーカー）」
+- ＞ ＝ 「〜に / 〜へ（指向マーカー）」
+- ． ＝ 「〜を（目的格マーカー）」
+- ， ＝ 「〜です / 〜ます / 〜だよ（状態確定）」
+- ＜ ＝ 「〜から（起点マーカー）」
+- ➔ ＝ 動詞・行動の接続（〜して / 〜いく）
+- +  ＝ 肯定・行動の意志（〜したい / 〜する / 欲しい）
+- ↑ ＝ 感情強度・状態の上昇 / 強調
+
+---
+
+### 4. 対象パケットストリーム
+${currentPacket}
+
+---
+
+【執行コマンド】
+上記のトポロジーを100%適合させ、文脈を補完しながら、最も人間として自然で美しい日本語の文章（復元テキスト）のみを出力してください。Q.E.D.`;
+
+        // クリップボードへパルス射出！
+        navigator.clipboard.writeText(promptTemplate).then(() => {
+          const originalText = btnDeepDiving.innerText;
+          btnDeepDiving.innerText = "⚡ COPIED! [READY TO INJECT]";
+          btnDeepDiving.style.background = "linear-gradient(135deg, #10b981, #059669)";
+          setTimeout(() => {
+            btnDeepDiving.innerText = originalText;
+            btnDeepDiving.style.background = "linear-gradient(135deg, #06b6d4, #3b82f6)";
+          }, 2000);
+        }).catch(err => {
+          alert("クリップボードへの射出に失敗しました。ブラウザの権限を確認してください。");
+        });
+      });
     }
 
   } catch (error) {
