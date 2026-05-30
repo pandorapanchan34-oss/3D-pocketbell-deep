@@ -20,6 +20,7 @@ export interface MacroEntry {
 }
 
 const BASE62 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+// 🟢 修正後：本家リポジトリの「public」階層を完璧に結合！
 const GITHUB_BASE = "https://raw.githubusercontent.com/pandorapanchan34-oss/3D-pocketbell/main/public/dict";
 
 // お兄ちゃん設計の国文法十品詞マッピングトポロジー
